@@ -1,8 +1,28 @@
 const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
 app.use(express.json());
+
+const customers = [];
+
+app.post("/account", (request, response) => {
+  const { cpf, name } = request.body;
+
+  const id = uuidv4();
+
+  customers.push({
+    cpf,
+    name,
+    id,
+    statement: [],
+  });
+
+  return response.status(201).send();
+});
+
+app.listen(3333);
 
 /**
  * GET - Buscar uma informação dentro do servidor.
@@ -17,31 +37,3 @@ app.use(express.json());
  * Query Params => Paginação / Filtro
  * Body Params => Os objetos inserção/alteração (JSON)
  */
-
-app.get("/courses", (request, response) => {
-  const query = request.query;
-  console.log(query);
-  response.json(["Curso 1", "Curso 2", "Curso 3"]);
-});
-
-app.post("/courses", (request, response) => {
-  const body = request.body;
-  console.log(body);
-  response.json(["Curso 1", "Curso 2", "Curso 3", "Curso 4"]);
-});
-
-app.put("/courses/:id", (request, response) => {
-  const { id } = request.params;
-  console.log(id);
-  response.json(["Curso 6", "Curso 2", "Curso 3", "Curso 4"]);
-});
-
-app.patch("/courses/:id", (request, response) => {
-  response.json(["Curso 6", "Curso 7", "Curso 3", "Curso 4"]);
-});
-
-app.delete("/courses/:id", (request, response) => {
-  response.json(["Curso 6", "Curso 2", "Curso 4"]);
-});
-
-app.listen(3333);
